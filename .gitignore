@@ -1,6 +1,7 @@
 .DS_Store
 y_list.npy
 __pycache__
+.idea
 .ipynb_checkpoints
 Installation/build
 Installation/dist
