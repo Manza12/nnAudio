@@ -1,0 +1,91 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+\begin{document}
+\section{Definitions}
+The CQT transform $X^{CQ}$ of a discrete time-domain
+signal $x(n)$ is defined by
+\begin{equation}
+X^{CQ}(k,n) = \sum_{j=n-\lfloor N_k / 2 \rfloor}^{n+\lfloor N_k / 2 \rfloor} x(j) a_k^{*}(j-n+N_k/2)
+\end{equation}
+where $k = 1, 2, . . . , K$ indexes the frequency bins of the
+CQT, $\lfloor \cdot \rfloor$ denotes rounding towards negative infinity and
+$a_k^{*}(n)$ denotes the complex conjugate of $a_k(n)$. The basis
+functions $a_k(n)$ are complex-valued waveforms, here also
+called time-frequency atoms, and are defined by
+\begin{equation}
+a_k(n) = \frac{1}{N_k} w(\frac{n}{N_k})\exp\left[- i 2 \pi n \frac{f_k}{f_s}\right]
+\end{equation}
+where $f_k$ is the center frequency of bin $k$, $f_s$ denotes the sampling rate, and $w(t)$, is a continuous window function (for example Hann or Blackman window), sampled at points determined by $t$. The window function is zero outside the range $t \in [0, 1]$.
+
+\section{Proof of the inequality}
+Let prove that 
+\begin{equation}
+\sup_{k, n \in \mathbb{Z}} |X^{CQ}(k,n)| = \| X^{CQ} \|_{\infty} \lessapprox \| x \|_{\infty} \cdot \| w \|_1  = \sup_{n \in \mathbb{Z}} |x(n)| \cdot   \left( \int_{t\in \mathbb{R}} |w(t)| \diff t \right) \, \, . 
+\end{equation} 
+
+First, let prove that we have $\forall k,n\in \mathbb{Z}$
+\begin{equation}\label{inequality}
+|X^{CQ}(k,n)| \leq \| x \|_{\infty} \cdot \sum_{j=n-\lfloor N_k / 2 \rfloor}^{n+\lfloor N_k / 2 \rfloor} |a_k^{*}(j-n+N_k/2) | \, .
+\end{equation}
+Indeed,
+\begin{align*}
+|X^{CQ}(k,n)| &= \left|\sum_{j=n-\lfloor N_k / 2 \rfloor}^{n+\lfloor N_k / 2 \rfloor} x(j) a_k^{*}(j-n+N_k/2) \right| \\
+&\leq \sum_{j=n-\lfloor N_k / 2 \rfloor}^{n+\lfloor N_k / 2 \rfloor} \left| x(j) a_k^{*}(j-n+N_k/2) \right| \\
+&= \sum_{j=n-\lfloor N_k / 2 \rfloor}^{n+\lfloor N_k / 2 \rfloor} \left| x(j) | \cdot |a_k^{*}(j-n+N_k/2) \right| \\
+&\leq \sup_{j \in \mathbb{Z}} | x(j) | \sum_{j=n-\lfloor N_k / 2 \rfloor}^{n+\lfloor N_k / 2 \rfloor} |a_k^{*}(j-n+N_k/2) | \\
+&= \| x(j) \|_{\infty} \cdot \sum_{j=n-\lfloor N_k / 2 \rfloor}^{n+\lfloor N_k / 2 \rfloor} |a_k^{*}(j-n+N_k/2) | \, \, .
+\end{align*} 
+
+Let now see that
+
+\begin{equation}\label{intergral approx}
+\sum_{j=n-\lfloor N_k / 2 \rfloor}^{n+\lfloor N_k / 2 \rfloor} |a_k^{*}(j-n+N_k/2) | \approx \int_{t\in \mathbb{R}} |w(t)| \diff t \, .
+\end{equation}
+
+In one hand, 
+\begin{align*}
+\sum_{j=n-\lfloor N_k / 2 \rfloor}^{n+\lfloor N_k / 2 \rfloor} |a_k^{*}(j-n+N_k/2) | &\approx \sum_{j=n-\lfloor N_k / 2 \rfloor}^{n+\lfloor N_k / 2 \rfloor} |a_k^{*}(j-n+\lfloor N_k / 2 \rfloor) | \\
+&= \sum_{j=n-\lfloor N_k / 2 \rfloor}^{n+\lfloor N_k / 2 \rfloor} |a_k(j-n+\lfloor N_k / 2 \rfloor) | \\
+&\overset{l=j-(n-\lfloor N_k / 2 \rfloor)}{=} \sum_{l=0}^{n+\lfloor N_k / 2 \rfloor - (n-\lfloor N_k / 2 \rfloor)} |a_k(l) | \\
+&= \sum_{l=0}^{2 \lfloor N_k / 2 \rfloor } |a_k(l) | \leq \sum_{l=0}^{N_k } |a_k(l) | \\
+&= \sum_{l=0}^{N_k } \left| \frac{1}{N_k} w(\frac{l}{N_k})\exp\left[- i 2 \pi j \frac{f_k}{f_s}\right] \right| \\
+&= \sum_{l=0}^{N_k } \left| \frac{1}{N_k} w(\frac{l}{N_k}) \right| \left| \exp\left[- i 2 \pi j \frac{f_k}{f_s}\right] \right| \\
+&= \sum_{l=0}^{N_k } \left| \frac{1}{N_k} w(\frac{l}{N_k})\right| \\
+&= \frac{1}{N_k} \sum_{l=0}^{N_k } \left| w(\frac{l}{N_k})\right|
+\end{align*}
+
+In the other hand,
+\begin{align*}
+\int_{t\in \mathbb{R}} |w(t)| \diff t &\overset{\text{supp} (w) = [0,1]}{=}  \int_{0}^{1} |w(t)| \diff t \\
+&\overset{t = \frac{u}{N_k} \Rightarrow \diff t = \frac{1}{N_k}\diff u}{=} \int_{0}^{N_k} \frac{1}{N_k} | w(\frac{u}{N_k})| \diff u \\
+&= \frac{1}{N_k} \int_{0}^{N_k} | w(\frac{u}{N_k})| \diff u \\
+&\overset{u=l, \diff u = 1}{\approx} \frac{1}{N_k} \sum_{l=1}^{N_k} | w(\frac{l}{N_k})| 
+\end{align*}
+
+So we get (\ref{intergral approx}).
+
+Substituting in (\ref{inequality}), we get $\forall k,n \in \mathbb{Z}$
+\begin{align*}
+&|X^{CQ}(k,n)| \leq \| x \|_{\infty} \cdot \sum_{j=n-\lfloor N_k / 2 \rfloor}^{n+\lfloor N_k / 2 \rfloor} |a_k^{*}(j-n+N_k/2) | \approx \| x \|_{\infty}  \int_{t\in \mathbb{R}} |w(t)| = \| x \|_{\infty} \| w \|_1 \\
+&\Rightarrow |X^{CQ}(k,n)| \lessapprox \| x \|_{\infty} \| w \|_1 \, .
+\end{align*}
+
+Which proves that 
+$$ \|X^{CQ}(k,n)\|_{\infty} \lessapprox \| x \|_{\infty} \| w \|_1 \, . $$
+
+\section{Application to signal processing}
+
+If we asumes that $\forall t \in \mathbb{R}$, $x(t) \in [-1, 1]$ (which is the case when dealing with audio signals in floating point format) then we have $\|x\|_{\infty} \leq 1$.
+
+If we also impose that the window is normalized in the $L^{1}(\mathbb{R})$ space, (\textit{i.e.}: $\|w\|_1 = 1$) then we have 
+$$ \|X^{CQ}(k,n)\|_{\infty} \lessapprox \| x \|_{\infty} \| w \|_1 \leq 1 \cdot \| w \|_1 = 1 \cdot 1 = 1 \, . $$
+
+That means that all the magnitudes of the CQT coefficients are less or equal than 1, which in dB scale means less or equal than 0.
+
+
+\end{document}
+
